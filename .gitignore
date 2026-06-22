@@ -1,0 +1,7 @@
+# Variables de entorno secretas
+.env
+
+# Archivos pesados del sistema que no deben subir a internet
+/build/
+/.gradle/
+/.idea/
