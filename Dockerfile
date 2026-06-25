@@ -1,14 +1,14 @@
-# 1. Etapa de compilación (Usa Gradle y Java 17)
-FROM gradle:8-jdk17 AS build
+# 1. Etapa de compilación (Usa Gradle y Java 21)
+FROM gradle:8-jdk21 AS build
 WORKDIR /app
 COPY . .
-# Otorga permisos de ejecución al script de Gradle (Soluciona el error 126)
+# Otorga permisos de ejecución al script de Gradle
 RUN chmod +x ./gradlew
 # Construye el empaquetado del servidor
 RUN ./gradlew installDist --no-daemon
 
-# 2. Etapa de producción (Usa Eclipse Temurin, el nuevo estándar oficial)
-FROM eclipse-temurin:17-jre-jammy
+# 2. Etapa de producción (Usa Eclipse Temurin con Java 21)
+FROM eclipse-temurin:21-jre-jammy
 WORKDIR /app
 # Copia solo los archivos necesarios de la etapa anterior
 COPY --from=build /app/build/install/ /app/
