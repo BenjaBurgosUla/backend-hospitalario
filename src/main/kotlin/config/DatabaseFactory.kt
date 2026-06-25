@@ -8,10 +8,12 @@ import io.github.cdimascio.dotenv.dotenv
 
 object DatabaseFactory {
     fun init() {
-        // Cargamos el archivo .env
-        val env = dotenv()
+        // Cargamos las variables de entorno, ignorando si falta el archivo .env (vital para la nube)
+        val env = dotenv {
+            ignoreIfMissing = true
+        }
 
-        // Jalamos los datos ocultos
+        // Jalamos los datos ocultos (los leerá del .env en tu PC, o del panel de Render en producción)
         val jdbcUrl = env["DB_URL"]
         val dbUser = env["DB_USER"]
         val dbPassword = env["DB_PASSWORD"]
