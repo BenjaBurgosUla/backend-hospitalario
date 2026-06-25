@@ -5,8 +5,8 @@ COPY . .
 # Construye el empaquetado del servidor
 RUN ./gradlew installDist --no-daemon
 
-# 2. Etapa de producción (Servidor ultraligero)
-FROM openjdk:17-jdk-slim
+# 2. Etapa de producción (Usa Eclipse Temurin, el nuevo estándar oficial)
+FROM eclipse-temurin:17-jre-jammy
 WORKDIR /app
 # Copia solo los archivos necesarios de la etapa anterior
 COPY --from=build /app/build/install/ /app/
