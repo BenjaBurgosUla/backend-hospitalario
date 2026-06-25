@@ -2,6 +2,8 @@
 FROM gradle:8-jdk17 AS build
 WORKDIR /app
 COPY . .
+# Otorga permisos de ejecución al script de Gradle (Soluciona el error 126)
+RUN chmod +x ./gradlew
 # Construye el empaquetado del servidor
 RUN ./gradlew installDist --no-daemon
 
