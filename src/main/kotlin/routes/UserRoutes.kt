@@ -2,7 +2,7 @@ package com.example.routes
 
 import com.example.dtos.UserCreateRequest
 import com.example.dtos.TokenRequest
-import com.example.dtos.UserUpdateRequest // <-- Esta importación también faltaba
+import com.example.dtos.UserUpdateRequest
 import com.example.services.UserService
 import io.ktor.server.auth.*
 import io.ktor.http.HttpStatusCode
@@ -32,17 +32,23 @@ fun Route.userRoutes(userService: UserService) {
             val response = userService.loginUser(request)
 
             if (response != null) {
-                // Le entregamos su Token!
                 call.respond(HttpStatusCode.OK, response)
             } else {
                 call.respond(HttpStatusCode.Unauthorized, "Correo o contraseña incorrectos")
             }
         }
 
-        // 3. EL GUARDIA DE SEGURIDAD (Protege las búsquedas, ediciones y eliminaciones)
+        // 3. EL GUARDIA DE SEGURIDAD
         authenticate("auth-jwt") {
 
-            // RUTA PARA BUSCAR (GET)
+            // NUEVA RUTA: OBTENER TODOS LOS USUARIOS (Para el Administrador)
+            get {
+                // Asumimos que tienes o crearás un método getAllUsers en tu UserService
+                val allUsers = userService.getAllUsers()
+                call.respond(HttpStatusCode.OK, allUsers)
+            }
+
+            // RUTA PARA BUSCAR POR ID (GET)
             get("/{id}") {
                 val id = call.parameters["id"]?.toIntOrNull()
                 if (id == null) {
@@ -91,6 +97,6 @@ fun Route.userRoutes(userService: UserService) {
                     call.respond(HttpStatusCode.NotFound, "Usuario no encontrado")
                 }
             }
-        } // Cierra el bloque del guardia
+        }
     }
 }

@@ -7,9 +7,14 @@ import io.ktor.server.netty.*
 import com.example.config.DatabaseFactory
 
 fun main() {
-    // Forzamos al servidor a encender leyendo nuestra función module() directamente
-    embeddedServer(Netty, port = 8080, host = "0.0.0.0", module = Application::module)
-        .start(wait = true)
+    // El servidor buscará el puerto que le asigne la nube, si no lo encuentra, usará el 8080 (para tu PC)
+    val port = System.getenv("PORT")?.toInt() ?: 8080
+
+    // Es CRÍTICO que el host sea "0.0.0.0" para que acepte conexiones externas
+    embeddedServer(Netty, port = port, host = "0.0.0.0") {
+        configureRouting()
+        // ... el resto de tus configuraciones
+    }.start(wait = true)
 }
 
 fun Application.module() {

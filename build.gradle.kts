@@ -38,6 +38,7 @@ dependencies {
     implementation("io.ktor:ktor-serialization-kotlinx-json:2.3.7")
     // Seguridad (Contraseñas)
     implementation("org.mindrot:jbcrypt:0.4")
+
     testImplementation(kotlin("test"))
     testImplementation(ktorLibs.server.testHost)
 }

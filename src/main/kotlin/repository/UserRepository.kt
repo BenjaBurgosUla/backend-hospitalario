@@ -1,14 +1,31 @@
 package com.example.repository
 
-// Importaciones corregidas con la ruta completa:
 import com.example.models.User
 import com.example.models.Users
 
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq // <-- ¡ESTE ES EL SALVAVIDAS QUE FALTABA!
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 
 class UserRepository {
+
+    // --- NUEVA FUNCIÓN PARA EL ADMIN ---
+    fun getAllUsers(): List<User> {
+        return transaction {
+            // selectAll() trae toda la tabla automáticamente
+            Users.selectAll()
+                .map { row ->
+                    User(
+                        id = row[Users.id].value,
+                        name = row[Users.name],
+                        email = row[Users.email],
+                        passwordHash = row[Users.passwordHash],
+                        role = row[Users.role]
+                    )
+                }
+        }
+    }
+
     fun getUserById(userId: Int): User? {
         return transaction {
             Users.select { Users.id eq userId }

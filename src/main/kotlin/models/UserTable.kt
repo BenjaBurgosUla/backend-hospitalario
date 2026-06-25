@@ -15,3 +15,4 @@ data class User(
     val passwordHash: String,
     val role: String
 )
+

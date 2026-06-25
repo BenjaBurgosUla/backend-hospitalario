@@ -24,9 +24,7 @@ data class TokenRequest(
 )
 
 @Serializable
-data class TokenResponse(
-    val token: String
-)
+data class TokenResponse(val token: String, val userId: Int)
 @Serializable
 data class UserUpdateRequest(
     val name: String,
