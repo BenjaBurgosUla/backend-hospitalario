@@ -1,15 +1,15 @@
 package com.example.dtos
 
-
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class MedicalRecordRequest(
     val patientId: Int,
-    val doctorId: Int, // Quién hizo la nota
+    val doctorId: Int,
     val diagnosis: String,
     val treatment: String,
-    val observations: String
+    val observations: String,
+    val createdAt: String
 )
 
 @Serializable

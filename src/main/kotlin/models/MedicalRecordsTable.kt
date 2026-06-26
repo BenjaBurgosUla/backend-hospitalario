@@ -1,6 +1,5 @@
 package com.example.models
 
-
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.ReferenceOption
 
@@ -15,7 +14,9 @@ object MedicalRecords : IntIdTable("medical_records") {
     val diagnosis = varchar("diagnosis", 255)
     val treatment = text("treatment")
     val observations = text("observations")
-    val createdAt = long("created_at") // Guardamos el tiempo como timestamp
+
+    // CORRECCIÓN: Ahora es varchar para coincidir con la base de datos y la App
+    val createdAt = varchar("created_at", 50)
 }
 
 // Clase de datos para trabajar en tu código Kotlin (Backend)
@@ -26,5 +27,6 @@ data class MedicalRecord(
     val diagnosis: String,
     val treatment: String,
     val observations: String,
-    val createdAt: Long
+    // CORRECCIÓN: Ahora es String
+    val createdAt: String
 )

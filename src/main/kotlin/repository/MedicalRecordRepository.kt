@@ -7,8 +7,8 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 class MedicalRecordRepository {
 
-    // Guardar una nueva nota
-    fun addRecord(patientId: Int, doctorId: Int, diagnosis: String, treatment: String, observations: String, createdAt: Long): Int {
+    // CORRECCIÓN: createdAt ahora se recibe como String
+    fun addRecord(patientId: Int, doctorId: Int, diagnosis: String, treatment: String, observations: String, createdAt: String): Int {
         return transaction {
             MedicalRecords.insert {
                 it[MedicalRecords.patientId] = patientId

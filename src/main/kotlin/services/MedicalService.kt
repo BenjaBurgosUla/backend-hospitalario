@@ -11,14 +11,15 @@ class MedicalService(
 ) {
 
     fun addRecord(request: MedicalRecordRequest): Int {
-        val timestamp = System.currentTimeMillis()
+        // CORRECCIÓN: Ya no generamos el número aquí.
+        // Pasamos directamente la fecha exacta (String) que la app Android acaba de crear.
         return medicalRepository.addRecord(
             request.patientId,
             request.doctorId,
             request.diagnosis,
             request.treatment,
             request.observations,
-            timestamp
+            request.createdAt // <-- Ahora pasa limpio a la base de datos
         )
     }
 
@@ -35,7 +36,7 @@ class MedicalService(
                 diagnosis = record.diagnosis,
                 treatment = record.treatment,
                 observations = record.observations,
-                createdAt = record.createdAt.toString() // O formatear a fecha legible
+                createdAt = record.createdAt // Ya viene en formato texto listo para leer
             )
         }
     }
