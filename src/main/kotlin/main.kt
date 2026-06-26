@@ -12,8 +12,8 @@ fun main() {
 
     // Es CRÍTICO que el host sea "0.0.0.0" para que acepte conexiones externas
     embeddedServer(Netty, port = port, host = "0.0.0.0") {
-        configureRouting()
-        // ... el resto de tus configuraciones
+        // SOLUCIÓN: Llamamos a module() para que ejecute TODA la configuración, no solo las rutas
+        module()
     }.start(wait = true)
 }
 
