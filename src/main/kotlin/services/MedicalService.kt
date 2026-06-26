@@ -11,23 +11,21 @@ class MedicalService(
 ) {
 
     fun addRecord(request: MedicalRecordRequest): Int {
-        // CORRECCIÓN: Ya no generamos el número aquí.
-        // Pasamos directamente la fecha exacta (String) que la app Android acaba de crear.
         return medicalRepository.addRecord(
             request.patientId,
             request.doctorId,
             request.diagnosis,
             request.treatment,
             request.observations,
-            request.createdAt // <-- Ahora pasa limpio a la base de datos
+            request.createdAt
         )
     }
 
     fun getRecordsForPatient(patientId: Int): List<MedicalRecordResponse> {
         val records = medicalRepository.getRecordsByPatientId(patientId)
 
-        // Convertimos el registro a una respuesta con nombre del médico
         return records.map { record ->
+            // Ahora llama a getUserById y recibe un PersonalData
             val doctor = personalRepository.getUserById(record.doctorId)
             MedicalRecordResponse(
                 id = record.id,
@@ -36,7 +34,7 @@ class MedicalService(
                 diagnosis = record.diagnosis,
                 treatment = record.treatment,
                 observations = record.observations,
-                createdAt = record.createdAt // Ya viene en formato texto listo para leer
+                createdAt = record.createdAt
             )
         }
     }

@@ -2,6 +2,8 @@ package com.example.services
 
 import com.example.dtos.TokenRequest
 import com.example.dtos.TokenResponse
+// Nota: Mantenemos los DTOs con nombre "User" por compatibilidad directa con tu app Android.
+// Si los renombraste en PersonalDTOs.kt, solo ajusta estas importaciones.
 import com.example.dtos.UserCreateRequest
 import com.example.dtos.UserResponse
 import com.example.dtos.UserUpdateRequest
@@ -14,34 +16,29 @@ import java.util.Date
 
 class PersonalService(private val repository: PersonalRepository) {
 
-    // --- NUEVA FUNCIÓN PARA EL ADMIN ---
     fun getAllUsers(): List<UserResponse> {
-        // Pedimos todos los usuarios a la base de datos
-        val users = repository.getAllUsers()
+        val personalList = repository.getAllUsers()
 
-        // Los mapeamos (convertimos) uno por uno a nuestra caja de respuesta segura
-        return users.map { user ->
-            UserResponse(user.id, user.name, user.email, user.role)
+        return personalList.map { personal ->
+            UserResponse(personal.id, personal.name, personal.email, personal.role)
         }
     }
 
     fun getUserById(id: Int): UserResponse? {
-        val user = repository.getUserById(id) ?: return null
-        return UserResponse(user.id, user.name, user.email, user.role)
+        val personal = repository.getUserById(id) ?: return null
+        return UserResponse(personal.id, personal.name, personal.email, personal.role)
     }
 
     fun registerUser(request: UserCreateRequest): UserResponse? {
         val hashedPassword = BCrypt.hashpw(request.passwordRaw, BCrypt.gensalt())
-        val newUserId = repository.createUser(request.name, request.email, hashedPassword)
-        return getUserById(newUserId)
+        val newId = repository.createUser(request.name, request.email, hashedPassword)
+        return getUserById(newId)
     }
 
     fun loginUser(request: TokenRequest): TokenResponse? {
-        val user = repository.getUserByEmail(request.email) ?: return null
+        val personal = repository.getUserByEmail(request.email) ?: return null
 
-        if (BCrypt.checkpw(request.passwordRaw, user.passwordHash)) {
-
-            // --- AQUÍ ESTÁ LA CORRECCIÓN PARA RENDER ---
+        if (BCrypt.checkpw(request.passwordRaw, personal.passwordHash)) {
             val env = dotenv {
                 ignoreIfMissing = true
             }
@@ -50,11 +47,11 @@ class PersonalService(private val repository: PersonalRepository) {
             val token = JWT.create()
                 .withAudience("hospital_audience")
                 .withIssuer("hospital_issuer")
-                .withClaim("email", user.email)
+                .withClaim("email", personal.email)
                 .withExpiresAt(Date(System.currentTimeMillis() + 3600000))
                 .sign(Algorithm.HMAC256(secretKey))
 
-            return TokenResponse(token, user.id)
+            return TokenResponse(token, personal.id)
         }
         return null
     }
