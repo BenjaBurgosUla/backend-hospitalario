@@ -10,7 +10,11 @@ import io.ktor.server.response.*
 import io.github.cdimascio.dotenv.dotenv
 
 fun Application.configureSecurity() {
-    val env = dotenv()
+    // Evitamos el pánico si no encuentra el .env en la nube
+    val env = dotenv {
+        ignoreIfMissing = true
+    }
+
     // Le pasamos la misma llave secreta para que pueda verificar las pulseras
     val secretKey = env["JWT_SECRET"] ?: "clave_alternativa"
 
