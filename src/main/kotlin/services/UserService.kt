@@ -41,7 +41,10 @@ class UserService(private val repository: UserRepository) {
 
         if (BCrypt.checkpw(request.passwordRaw, user.passwordHash)) {
 
-            val env = dotenv()
+            // --- AQUÍ ESTÁ LA CORRECCIÓN PARA RENDER ---
+            val env = dotenv {
+                ignoreIfMissing = true
+            }
             val secretKey = env["JWT_SECRET"] ?: "clave_alternativa_por_si_falla"
 
             val token = JWT.create()
