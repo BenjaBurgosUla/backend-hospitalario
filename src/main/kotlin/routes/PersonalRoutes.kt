@@ -3,21 +3,20 @@ package com.example.routes
 import com.example.dtos.UserCreateRequest
 import com.example.dtos.TokenRequest
 import com.example.dtos.UserUpdateRequest
-import com.example.services.UserService
+import com.example.services.PersonalService
 import io.ktor.server.auth.*
 import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Route.userRoutes(userService: UserService) {
+fun Route.userRoutes(personalService: PersonalService) {
     route("/users") {
 
         // 1. RUTA PARA CREAR PACIENTE
         post {
             val request = call.receive<UserCreateRequest>()
-            val newUser = userService.registerUser(request)
+            val newUser = personalService.registerUser(request)
 
             if (newUser != null) {
                 call.respond(HttpStatusCode.Created, newUser)
@@ -29,7 +28,7 @@ fun Route.userRoutes(userService: UserService) {
         // 2. RUTA PARA INICIAR SESIÓN
         post("/login") {
             val request = call.receive<TokenRequest>()
-            val response = userService.loginUser(request)
+            val response = personalService.loginUser(request)
 
             if (response != null) {
                 call.respond(HttpStatusCode.OK, response)
@@ -44,7 +43,7 @@ fun Route.userRoutes(userService: UserService) {
             // NUEVA RUTA: OBTENER TODOS LOS USUARIOS (Para el Administrador)
             get {
                 // Asumimos que tienes o crearás un método getAllUsers en tu UserService
-                val allUsers = userService.getAllUsers()
+                val allUsers = personalService.getAllUsers()
                 call.respond(HttpStatusCode.OK, allUsers)
             }
 
@@ -56,7 +55,7 @@ fun Route.userRoutes(userService: UserService) {
                     return@get
                 }
 
-                val user = userService.getUserById(id)
+                val user = personalService.getUserById(id)
                 if (user != null) {
                     call.respond(HttpStatusCode.OK, user)
                 } else {
@@ -73,7 +72,7 @@ fun Route.userRoutes(userService: UserService) {
                 }
 
                 val request = call.receive<UserUpdateRequest>()
-                val updatedUser = userService.updateUser(id, request)
+                val updatedUser = personalService.updateUser(id, request)
 
                 if (updatedUser != null) {
                     call.respond(HttpStatusCode.OK, updatedUser)
@@ -90,7 +89,7 @@ fun Route.userRoutes(userService: UserService) {
                     return@delete
                 }
 
-                val success = userService.deleteUser(id)
+                val success = personalService.deleteUser(id)
                 if (success) {
                     call.respond(HttpStatusCode.OK, "Usuario eliminado correctamente del sistema")
                 } else {

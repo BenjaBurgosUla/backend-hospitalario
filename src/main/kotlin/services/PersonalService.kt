@@ -5,14 +5,14 @@ import com.example.dtos.TokenResponse
 import com.example.dtos.UserCreateRequest
 import com.example.dtos.UserResponse
 import com.example.dtos.UserUpdateRequest
-import com.example.repository.UserRepository
+import com.example.repository.PersonalRepository
 import io.github.cdimascio.dotenv.dotenv
 import org.mindrot.jbcrypt.BCrypt
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import java.util.Date
 
-class UserService(private val repository: UserRepository) {
+class PersonalService(private val repository: PersonalRepository) {
 
     // --- NUEVA FUNCIÓN PARA EL ADMIN ---
     fun getAllUsers(): List<UserResponse> {
